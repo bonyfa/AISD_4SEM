@@ -132,7 +132,20 @@ public:
     }
 };
 
+template<typename T>
+HashTable<T, int> countDuplicates(const std::vector<T>& array) {
+    HashTable<T, int> counts(10);
+    for (const auto& num : array) {
+        if (counts.search(num) == nullptr) {
+            counts.insert(num, 1);
+        }
+        else {
+            *counts.search(num) += 1;
+        }
+    }
 
+    return counts;
+}
 
 
 
