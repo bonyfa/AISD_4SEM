@@ -1,0 +1,21 @@
+title|time(ms)
+time to insert 1000 elems into a vector|0.103923
+time to insert 10000 elems into a vector|1.01358
+time to insert 100000 elems into a vector|11.9132
+time to insert 1000 elems into a binary_tree|0.306104
+time to insert 10000 elems into a binary_tree|4.55102
+time to insert 100000 elems into a binary_tree|51.01541
+
+time to search for an elem in a vector of 1000 elems|0.0019535
+time to search for an elem in a vector of 10000 elems|0.0135253
+time to search for an elem in a vector of 100000 elems|0.167309
+time to search for an elem in a binary_tree of 1000 elems|0.0001426
+time to search for an elem in a binary_tree of 10000 elems|0.0002858
+time to search for an elem in a binary_tree of 100000 elems|0.0010886
+
+time to add and remove a random element from a vector of 1000 elements|0.0044404
+time to add and remove a random element from a vector of 10000 elements|0.0310642
+time to add and remove a random element from a vector of 100000 elements|0.340731
+time to add and remove a random element from a binary_tree of 1000 elements|0.0008361
+time to add and remove a random element from a binary_tree of 10000 elements|0.0019221
+time to add and remove a random element from a binary_tree of 100000 elements|0.0026429
