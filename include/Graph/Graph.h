@@ -70,7 +70,8 @@ public:
         if (!has_vertex(e.from) || !has_vertex(e.to))
             return false;
         auto& list = _edges[e.from];
-        auto it = std::remove(list.begin(), list.end(), e);
+        auto it = std::remove_if(list.begin(), list.end(),
+            [to](const Edge& e) { return e.to == to; });
         if (it != list.end()) {
             list.erase(it, list.end());
             return true;
@@ -88,7 +89,8 @@ public:
         if (!has_vertex(e.from) || !has_vertex(e.to))
             return false;
         const auto& edges = _edges.at(e.from);
-        return std::find(edges.begin(), edges.end(), e) != edges.end();
+        return std::find_if(edges.begin(), edges.end(),
+            [to](const Edge& e) { return e.to == to; }) != edges.end();
     }
     size_t order() const {
         return _vertices.size();
