@@ -42,6 +42,96 @@ public:
     }
     HashTable(const HashTable& other) : _size(other._size), table(other.table) {}
     ~HashTable() = default;
+    HashTable& operator=(const HashTable& other) {
+        if (this != &other) {
+            _size = other._size;
+            table = other.table;
+        }
+        return *this;
+    }
+
+    void print() {
+        for (size_t i = 0; i < _size; ++i) {
+            std::cout << "Bucket " << i << ": ";
+            for (const auto& node : table[i]) {
+                std::cout << "(" << node.key << ", " << node.value << ") ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    void insert(const K& key, const T& value) {
+        size_t index = hash(key);
+        for (auto& node : table[index]) {
+            if (node.key == key) {
+                node.value = value;
+                return;
+            }
+        }
+        table[index].emplace_back(key, value);
+    }
+
+    void insert_or_assign(const K& key, const T& value) {
+        size_t index = hash(key);
+        for (auto& node : table[index]) {
+            if (node.key == key) {
+                node.value = value;
+                return;
+            }
+        }
+        table[index].emplace_back(key, value);
+    }
+
+    bool contains(const T& value) const {
+        for (const auto& bucket : table) {
+            for (const auto& node : bucket) {
+                if (node.value == value) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    T* search(const K& key) {
+        size_t index = hash(key);
+        for (auto& node : table[index]) {
+            if (node.key == key) {
+                return &node.value;
+            }
+        }
+        return nullptr;
+    }
+
+    bool erase(const K& key) {
+        size_t index = hash(key);
+        auto& bucket = table[index];
+        auto it = std::find_if(bucket.begin(), bucket.end(), [&](const HashNode& node) {
+            return node.key == key;
+            });
+        if (it != bucket.end()) {
+            bucket.erase(it);
+            return true;
+        }
+        return false;
+    }
+
+    int count(const K& key) const {
+        size_t index = hash(key);
+        int count = 0;
+        for (const auto& node : table[index]) {
+            if (node.key == key) {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    size_t getSize() const {
+        return _size;
+    }
+};
+
 
 
 
