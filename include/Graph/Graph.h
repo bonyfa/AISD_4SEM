@@ -155,6 +155,30 @@ public:
         std::reverse(path.begin(), path.end());
         return path;
     }
+    void walk(const Vertex& start_vertex, std::function<void(const Vertex&)> action) {
+        if (!has_vertex(start_vertex))
+            return;
+
+        std::queue<Vertex> queue;
+        std::unordered_set<Vertex> visited;
+
+        queue.push(start_vertex);
+        visited.insert(start_vertex);
+
+        while (!queue.empty()) {
+            Vertex current = queue.front();
+            queue.pop();
+            action(current);
+
+            for (const Edge& edge : _edges.at(current)) {
+                if (visited.find(edge.to) == visited.end()) {
+                    queue.push(edge.to);
+                    visited.insert(edge.to);
+                }
+            }
+        }
+    }
+
 
 
 };
