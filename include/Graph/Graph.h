@@ -178,6 +178,42 @@ public:
             }
         }
     }
+    Vertex find_center() {
+        Vertex  center;
+        std::unordered_set<Vertex> vertices_ = vertices();
+        std::unordered_map<Vertex, double> avg_distances;
+        for (const auto& v : vertices_) {
+            double total_distance = 0.0;
+            int num_neighbors = 0;
+            for (const auto& u : vertices_) {
+
+                if (u != v) {
+                    std::vector<Edge> path = shortest_path(v, u);
+                    double path_distance = 0.0;
+                    for (const auto& edge : path) {
+                        path_distance += edge.distance;
+                    }
+                    total_distance += path_distance;
+                    num_neighbors++;
+                }
+            }
+            if (num_neighbors > 0) {
+                avg_distances[v] = total_distance / num_neighbors;
+            }
+        }
+        double min_distance = 99999999999999999999999.0;
+        for (const auto& pair : avg_distances) {
+            const Vertex& v = pair.first;
+            double distance = pair.second;
+
+            if (distance < min_distance) {
+                min_distance = distance;
+                center = v;
+            }
+        }
+
+        return center;
+    }
 
 
 
