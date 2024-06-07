@@ -90,8 +90,71 @@ public:
         const auto& edges = _edges.at(e.from);
         return std::find(edges.begin(), edges.end(), e) != edges.end();
     }
+    size_t order() const {
+        return _vertices.size();
+    }
+    size_t degree(const Vertex& v) const {
+        if (!has_vertex(v))
+            throw std::invalid_argument("Vertex doesn't exist in the graph");
 
-    
+        size_t degree = _edges.at(v).size();
+        for (const auto& kv : _edges) {
+            if (kv.first != v) {
+                for (const Edge& e : kv.second) {
+                    if (e.to == v)
+                        degree++;
+                }
+            }
+        }
+        return degree;
+    }
+
+    std::vector<Edge> shortest_path(const Vertex& from, const Vertex& to) const {
+        if (!has_vertex(from) || !has_vertex(to))
+            throw std::invalid_argument("Vertex doesn't exist in the graph");
+        std::unordered_map<Vertex, Distance> distance;
+        std::unordered_map<Vertex, Edge> predecessor;
+
+        for (const Vertex& v : _vertices) {
+            distance[v] = std::numeric_limits<Distance>::infinity();
+            predecessor[v] = Edge();
+        }
+
+        distance[from] = Distance();
+
+        for (size_t i = 1; i < _vertices.size(); ++i) {
+            for (const auto& kv : _edges) {
+                const Vertex& u = kv.first;
+                for (const Edge& e : kv.second) {
+                    Vertex v = e.to;
+                    Distance weight = e.distance;
+                    if (distance[u] + weight < distance[v]) {
+                        distance[v] = distance[u] + weight;
+                        predecessor[v] = e;
+                    }
+                }
+            }
+        }
+
+
+        for (const auto& kv : _edges) {
+            const Vertex& u = kv.first;
+            for (const Edge& e : kv.second) {
+                Vertex v = e.to;
+                Distance weight = e.distance;
+                if (distance[u] + weight < distance[v]) {
+                    throw std::runtime_error("The graph contains a negative cycle");
+                }
+            }
+        }
+
+        std::vector<Edge> path;
+        for (Vertex v = to; predecessor[v].from != Vertex(); v = predecessor[v].from) {
+            path.push_back(predecessor[v]);
+        }
+        std::reverse(path.begin(), path.end());
+        return path;
+    }
 
 
 };
